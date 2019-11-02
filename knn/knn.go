@@ -3,6 +3,7 @@ package knn
 import (
 	"container/heap"
 	"fmt"
+	"math"
 
 	clf "github.com/Giulianos/ml-tp4/classifier"
 )
@@ -14,6 +15,7 @@ type KNN struct {
 	k        int
 	examples []clf.Example
 	targets  []string
+	weighted bool
 }
 
 // New creates a KNN classifier
@@ -21,7 +23,14 @@ func New(k int, distance DistanceFunc) KNN {
 	return KNN{
 		distance: distance,
 		k:        k,
+		weighted: false,
 	}
+}
+
+// SetWeighted sets whether to use weighted
+// contributions based on distance.
+func (knn *KNN) SetWeighted(value bool) {
+	knn.weighted = value
 }
 
 // Fit trains the classifier
@@ -66,6 +75,10 @@ func (knn KNN) Classify(e clf.Example) string {
 			return *n.class
 		}
 		var weight float64 = 1
+		// Check if we have to weight by distance
+		if knn.weighted {
+			weight *= 1 / math.Pow(n.distance, 2)
+		}
 		contrib[*n.class] += weight
 	}
 

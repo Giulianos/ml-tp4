@@ -38,7 +38,7 @@ func TestGetNearest(t *testing.T) {
 	}
 }
 
-func TestClassify(t *testing.T) {
+func TestClassifyNotWeighted(t *testing.T) {
 	knn := New(5, Distance1D("height"))
 
 	X := []clf.Example{
@@ -63,10 +63,47 @@ func TestClassify(t *testing.T) {
 
 	_ = knn.Fit(X, y)
 
-	class := knn.Classify(clf.Example{"height": 10})
+	expected := "blue"
+	actual := knn.Classify(clf.Example{"height": 10})
 
-	if class != "blue" {
-		t.Errorf("class should be red, got %s", class)
+	if actual != expected {
+		t.Errorf("class should be %s, got %s", expected, actual)
+	}
+
+}
+
+func TestClassifyWeighted(t *testing.T) {
+	knn := New(5, Distance1D("height"))
+	// Set weighted contributions
+	knn.SetWeighted(true)
+
+	X := []clf.Example{
+		{"height": 11.4},
+		{"height": 9.3},
+		{"height": 100},
+		{"height": 4.3},
+		{"height": 150},
+		{"height": 15.2},
+		{"height": 8},
+	}
+
+	y := []string{
+		"red",
+		"red",
+		"green",
+		"blue",
+		"green",
+		"blue",
+		"blue",
+	}
+
+	_ = knn.Fit(X, y)
+
+	expected := "red"
+	actual := knn.Classify(clf.Example{"height": 10})
+
+	if actual != expected {
+		t.Errorf("class should be %s, got %s", expected, actual)
 	}
 
 }

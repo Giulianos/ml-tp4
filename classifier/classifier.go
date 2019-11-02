@@ -8,5 +8,4 @@ type Example map[string]float64
 // feature classifier
 type Classifier interface {
 	Classify(example Example) string
-	GetTargetAttribute() string
 }

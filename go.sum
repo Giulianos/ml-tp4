@@ -1,0 +1,4 @@
+github.com/Giulianos/ml-tp2 v0.0.0-20191016034751-2f4360841d37 h1:Sv3ApNxsuyJPQ+36uiGiclujYYppEF5pq9kYezpP8UI=
+github.com/Giulianos/ml-tp2 v0.0.0-20191016034751-2f4360841d37/go.mod h1:7twX81TfLVGJszzsSbbtn733YQ7zuuOJYHeqFly88qA=
+github.com/gorilla/handlers v1.4.2/go.mod h1:Qkdc/uu4tH4g6mTK6auzZ766c4CA0Ng8+o/OAirnOIQ=
+github.com/gorilla/mux v1.7.3/go.mod h1:1lud6UwP+6orDFRuTfBEV8e9/aOM/c4fVVCaMa2zaAs=

@@ -6,7 +6,7 @@ import (
 	clus "github.com/Giulianos/ml-tp4/cluster"
 )
 
-func TestClassify(t *testing.T) {
+func TestPredict(t *testing.T) {
 	kmeans := New(2, 10)
 
 	X := []clus.Example{
@@ -22,10 +22,10 @@ func TestClassify(t *testing.T) {
 
 	kmeans.Fit(X)
 
-	class1 := kmeans.Predict(clus.Example{0.5, 0.5})
-	class2 := kmeans.Predict(clus.Example{4.5, 4.5})
+	label1 := kmeans.Predict(clus.Example{0.5, 0.5})
+	label2 := kmeans.Predict(clus.Example{4.5, 4.5})
 
-	if class1 == class2 {
-		t.Error("class1 should be different than class2")
+	if label1 == label2 {
+		t.Error("label1 should be different than label2")
 	}
 }

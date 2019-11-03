@@ -1,62 +1,57 @@
 package kmeans
 
 import (
-	"log"
 	"math"
 	"math/rand"
-	"strconv"
 
-	clf "github.com/Giulianos/ml-tp4/classifier"
+	clus "github.com/Giulianos/ml-tp4/cluster"
 )
 
 // KMeans is the K-Means
-// Classifier interface implementation
+// Cluster interface implementation
 type KMeans struct {
 	k         int
-	centroids map[string]clf.Example
+	centroids []clus.Example
 	distance  DistanceFunc
 	rng       *rand.Rand
 }
 
-// New creates a new KMeans implementation
-// of the Classifier interface.
+// New creates a new KMeans clusterer
 func New(k int, seed int64) KMeans {
 	return KMeans{
 		k:         k,
 		distance:  DistanceEuclideanAll,
-		centroids: make(map[string]clf.Example, k),
+		centroids: make([]clus.Example, k),
 		rng:       rand.New(rand.NewSource(seed)),
 	}
 }
 
-// Fit trains the classifier
-func (km *KMeans) Fit(examples []clf.Example) {
-	currClfs := make([]string, len(examples))
-	prevClfs := make([]string, len(examples))
+// Fit trains the clusterer
+func (km *KMeans) Fit(examples []clus.Example) {
+	currClfs := make([]int, len(examples))
+	prevClfs := make([]int, len(examples))
 
 	// Initialize random classes
 	for i := range currClfs {
-		currClfs[i] = strconv.FormatInt(int64(km.rng.Intn(km.k)), 10)
+		currClfs[i] = km.rng.Intn(km.k)
 	}
 
 	for classificationsDiffer(prevClfs, currClfs) {
-		log.Println(currClfs)
 		// Compute new centroids
 		for i := 0; i < km.k; i++ {
-			cluster := strconv.FormatInt(int64(i), 10)
-			km.centroids[cluster] = computeCentroid(examples, currClfs, cluster)
+			km.centroids[i] = computeCentroid(examples, currClfs, i)
 		}
 		// Save current classifications to check if it changed before next iteration
 		copy(prevClfs, currClfs)
 		// Reclassify
 		for i, e := range examples {
-			currClfs[i] = km.Classify(e)
+			currClfs[i] = km.Predict(e)
 		}
 	}
 
 }
 
-func classificationsDiffer(prevClfs, curClfs []string) bool {
+func classificationsDiffer(prevClfs, curClfs []int) bool {
 	for i := range prevClfs {
 		if prevClfs[i] != curClfs[i] {
 			return true
@@ -66,11 +61,11 @@ func classificationsDiffer(prevClfs, curClfs []string) bool {
 	return false
 }
 
-func computeCentroid(examples []clf.Example, currClfs []string, cluster string) clf.Example {
+func computeCentroid(examples []clus.Example, currClfs []int, cluster int) clus.Example {
 	if len(examples) == 0 {
 		return nil
 	}
-	centroid := make(clf.Example, len(examples[0]))
+	centroid := make(clus.Example, len(examples[0]))
 
 	for i, e := range examples {
 		if currClfs[i] != cluster {
@@ -84,11 +79,11 @@ func computeCentroid(examples []clf.Example, currClfs []string, cluster string) 
 	return centroid
 }
 
-// Classify classifies an example
-func (km KMeans) Classify(e clf.Example) string {
+// Predict predicts the label of an example
+func (km KMeans) Predict(e clus.Example) int {
 	// find nearest centroid
 	var curDist = math.MaxFloat64
-	var curCent string
+	var curCent int
 
 	for i, c := range km.centroids {
 		d := km.distance(e, c)
@@ -99,10 +94,4 @@ func (km KMeans) Classify(e clf.Example) string {
 	}
 
 	return curCent
-}
-
-// GetTargetAttribute returns the target
-// attribute of the classifier
-func (km KMeans) GetTargetAttribute() string {
-	return ""
 }

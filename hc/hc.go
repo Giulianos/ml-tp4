@@ -1,29 +1,23 @@
 package hc
 
-import clf "github.com/Giulianos/ml-tp4/classifier"
+import clus "github.com/Giulianos/ml-tp4/cluster"
 
 // HC is the Hierarchical Clustering
 // Classifier interface implementation
 type HC struct {
 }
 
-// New creates a new Hierarchical Clustering classifier
+// New creates a new Hierarchical Clustering clusterer
 func New() HC {
 	return HC{}
 }
 
-// Classify classifies an example
-func (hc HC) Classify(e clf.Example) string {
+// Predict predicts the label of an example
+func (hc HC) Predict(e clus.Example) string {
 	return ""
 }
 
-// Fit trains the classifier
-func (hc *HC) Fit(examples []clf.Example) {
+// Fit trains the clusterer
+func (hc *HC) Fit(examples []clus.Example) {
 
-}
-
-// GetTargetAttribute returns the target
-// attribute of the classifier
-func (hc HC) GetTargetAttribute() string {
-	return ""
 }

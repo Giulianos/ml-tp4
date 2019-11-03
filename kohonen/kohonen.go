@@ -1,8 +1,6 @@
 package kohonen
 
 import (
-	"fmt"
-	"io"
 	"math"
 	"math/rand"
 
@@ -23,19 +21,19 @@ type Kohonen struct {
 }
 
 // New creates a Kohonen clusterer
-func New(lr DecayFunc, h NeighborhoodKernelFunc, dif DifferenceFunc, rng rand.Rand) Kohonen {
+func New(rows, cols int, lr DecayFunc, h NeighborhoodKernelFunc, dif DifferenceFunc, rng rand.Rand) Kohonen {
 	return Kohonen{
 		lr:          lr,
 		h:           h,
 		dif:         dif,
 		rng:         rng,
-		latticeRows: 10,
-		latticeCols: 10,
+		latticeRows: rows,
+		latticeCols: cols,
 	}
 }
 
 // Fit trains the clusterer
-func (k *Kohonen) Fit(examples []clus.Example) {
+func (k *Kohonen) Fit(examples []clus.Example, maxIter int) {
 	// examples dimension
 	k.dim = len(examples[0])
 
@@ -47,8 +45,6 @@ func (k *Kohonen) Fit(examples []clus.Example) {
 			k.units[pos] = newUnit(k.dim, pos, k.rng)
 		}
 	}
-
-	maxIter := 100000
 
 	// main loop
 	for t := 0; t < maxIter; t++ {
@@ -117,16 +113,14 @@ func (k Kohonen) getNeighborhood(unitPos UnitPos) []UnitPos {
 	return neighbors
 }
 
-// PrintWeights prints the weights of each unit to writer
-func (k Kohonen) PrintWeights(writer io.Writer) {
-	_, _ = fmt.Fprintln(writer, "row,col,w0,w1")
-	for _, unit := range k.units {
-		_, _ = fmt.Fprintf(writer, "%d,%d,%f,%f\n", unit.pos.row, unit.pos.col, unit.w[0], unit.w[1])
-	}
+func (k Kohonen) unitPosToLabel(up UnitPos) int {
+	return up.row*k.latticeCols + up.col
 }
 
 // Predict predicts the cluster to which
 // e belongs
 func (k Kohonen) Predict(e clus.Example) int {
-	return 0
+	return k.unitPosToLabel(
+		k.findBMU(e),
+	)
 }

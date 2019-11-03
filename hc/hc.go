@@ -59,8 +59,9 @@ func (hc *HC) Fit(examples []clus.Example) {
 	for len(hc.groups) > 2 {
 		minSim := math.MaxFloat64
 		var minG1, minG2 int
-		for i, g1 := range hc.groups {
-			for j, g2 := range hc.groups {
+		for i := 0; i < len(hc.groups)-1; i++ {
+			for j := i + 1; j < len(hc.groups); j++ {
+				g1, g2 := hc.groups[i], hc.groups[j]
 				if i == j {
 					continue
 				}

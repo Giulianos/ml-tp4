@@ -7,7 +7,7 @@ import (
 )
 
 func TestClassify(t *testing.T) {
-	kmeans := New()
+	kmeans := New(2, 10)
 
 	X := []clf.Example{
 		{"x": 0, "y": 0},

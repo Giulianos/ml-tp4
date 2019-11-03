@@ -6,8 +6,8 @@ import (
 	clus "github.com/Giulianos/ml-tp4/cluster"
 )
 
-func TestClassify(t *testing.T) {
-	hc := New()
+func TestPredictDifferentClusters(t *testing.T) {
+	hc := New(CentroidSimilarity)
 
 	X := []clus.Example{
 		{0, 0},
@@ -22,10 +22,34 @@ func TestClassify(t *testing.T) {
 
 	hc.Fit(X)
 
-	class1 := hc.Predict(clus.Example{0.5, 0.5})
-	class2 := hc.Predict(clus.Example{4.5, 4.5})
+	label1 := hc.Predict(clus.Example{0.5, 0.5})
+	label2 := hc.Predict(clus.Example{4.5, 4.5})
 
-	if class1 == class2 {
-		t.Error("class1 should be different than class2")
+	if label1 == label2 {
+		t.Error("label1 should be different than label")
+	}
+}
+
+func TestPredictSameClusters(t *testing.T) {
+	hc := New(CentroidSimilarity)
+
+	X := []clus.Example{
+		{0, 0},
+		{1, 0},
+		{0, 1},
+		{1, 1},
+		{4, 4},
+		{5, 4},
+		{4, 5},
+		{5, 5},
+	}
+
+	hc.Fit(X)
+
+	label1 := hc.Predict(clus.Example{0.5, 0.5})
+	label2 := hc.Predict(clus.Example{0.3, 0.4})
+
+	if label1 != label2 {
+		t.Error("label1 should be equal to label2")
 	}
 }

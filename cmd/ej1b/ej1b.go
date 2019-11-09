@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -10,11 +11,16 @@ import (
 )
 
 func main() {
-	xTrain, yTrain, err := loadCSV("datasets/acath2_train.csv")
+	trainFilename := flag.String("train-file", "", "training dataset filename")
+	testFilename := flag.String("test-file", "", "testing dataset filename")
+	dropSex :=
+		flag.Parse()
+
+	xTrain, yTrain, err := loadCSV(trainFilename)
 	if err != nil {
 		log.Fatal(err)
 	}
-	xTest, yTest, err := loadCSV("datasets/acath2_test.csv")
+	xTest, yTest, err := loadCSV(testFilename)
 	if err != nil {
 		log.Fatal(err)
 	}

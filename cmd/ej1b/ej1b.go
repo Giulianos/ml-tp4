@@ -13,14 +13,18 @@ import (
 func main() {
 	trainFilename := flag.String("train-file", "", "training dataset filename")
 	testFilename := flag.String("test-file", "", "testing dataset filename")
-	dropSex :=
-		flag.Parse()
+	flag.Parse()
 
-	xTrain, yTrain, err := loadCSV(trainFilename)
+	if len(*testFilename) == 0 || len(*trainFilename) == 0 {
+		flag.PrintDefaults()
+		os.Exit(1)
+	}
+
+	xTrain, yTrain, err := loadCSV(*trainFilename)
 	if err != nil {
 		log.Fatal(err)
 	}
-	xTest, yTest, err := loadCSV(testFilename)
+	xTest, yTest, err := loadCSV(*testFilename)
 	if err != nil {
 		log.Fatal(err)
 	}

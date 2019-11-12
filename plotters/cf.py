@@ -14,4 +14,7 @@ cf = sns.heatmap(df, annot=True, cmap='Blues', fmt='g')
 plt.ylabel('True value')
 plt.xlabel('Predicted value')
 plt.title(sys.argv[1])
-plt.show()
+if len(sys.argv) < 3:
+    plt.show()
+else:
+    plt.savefig(sys.argv[2])

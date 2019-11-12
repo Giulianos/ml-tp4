@@ -44,6 +44,9 @@ func loadDataFrame(filename string) ([]clf.Example, []string, error) {
 		// create new example
 		example := make(clf.Example, len(headers))
 		for headerPos, header := range headers {
+			if header == "sex" {
+				continue
+			}
 			if headerPos == len(headers)-1 {
 				targets = append(targets, r[headerPos])
 			} else {
@@ -107,8 +110,6 @@ func main() {
 	}
 
 	// Output results
-	log.Printf("TP: %d", tp)
-	log.Printf("FP: %d", tn)
-	log.Printf("FN: %d", fn)
-	log.Printf("TN: %d", tn)
+	fmt.Println("tp,fp,fn,tn")
+	fmt.Printf("%d,%d,%d,%d", tp, fp, fn, tn)
 }

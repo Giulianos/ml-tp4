@@ -6,6 +6,36 @@ import (
 	"strings"
 )
 
+func textToFeatures(texts []string) ([][]float64, []string) {
+	labels := []string{
+		"sentWcAvg",
+		"mostRepFreqSum",
+		"diffWc",
+		"subordFreq",
+		"coordFreq",
+		"detArtFreq",
+		"indetArtFreq",
+	}
+
+	df := make([][]float64, 0, len(texts))
+
+	for _, t := range texts {
+		features := make([]float64, 0, len(labels))
+		features = append(features,
+			averageSentenceWords(t),
+			modeWordsFreqSum(t),
+			relativeDifferentWords(t),
+			relSubordConjOccurrences(t),
+			relCoordConjOccurrences(t),
+			relDetArtOccurrences(t),
+			relIndetArtOccurrences(t),
+		)
+		df = append(df, features)
+	}
+
+	return df, labels
+}
+
 func averageSentenceWords(text string) float64 {
 	// split in sentences
 	sentences := strings.Split(sanitizeText(text), ".")

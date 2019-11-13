@@ -4,11 +4,23 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"math"
+	"math/rand"
 
 	"github.com/Giulianos/ml-tp4/cluster"
 	"github.com/Giulianos/ml-tp4/hc"
 	"github.com/Giulianos/ml-tp4/kmeans"
+	"github.com/Giulianos/ml-tp4/kohonen"
 )
+
+// Kohonen functions
+var distanceFunc = func(e cluster.Example, w []float64) float64 {
+	var squared float64
+	for i, v := range e {
+		squared += math.Pow(v-w[i], 2)
+	}
+	return math.Sqrt(squared)
+}
 
 func mainPredict() {
 	textDir := flag.String("dir", "", "texts directory")
@@ -31,6 +43,17 @@ func mainPredict() {
 		hcModel := hc.New(hc.CentroidSimilarity, 5)
 		hcModel.Fit(xs)
 		model = hcModel
+	case "kohonen":
+		log.Println("running kohonen")
+		kModel := kohonen.New(
+			25, 25,
+			kohonen.ExpDecay(0.1, 0),
+			kohonen.DefaultKernelFunc,
+			distanceFunc,
+			*rand.New(rand.NewSource(10)),
+		)
+		kModel.Fit(scaleExamples(xs), 10000)
+		model = kModel
 	}
 
 	// Predict labels

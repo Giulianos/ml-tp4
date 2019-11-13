@@ -28,3 +28,9 @@ func ExpDecay(x0 float64, r float64) DecayFunc {
 		return x0 * math.Exp(-1*float64(t)*r)
 	}
 }
+
+func DefaultKernelFunc(t int, w, n UnitPos) float64 {
+	d := math.Pow(float64(w.row)-float64(n.row), 2) + math.Pow(float64(w.col)-float64(n.col), 2)
+	sig := 0.1
+	return math.Exp(-1 * d / 2 * sig)
+}

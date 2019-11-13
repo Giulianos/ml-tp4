@@ -7,7 +7,7 @@ import (
 )
 
 func TestPredictDifferentClusters(t *testing.T) {
-	hc := New(CentroidSimilarity)
+	hc := New(CentroidSimilarity, 2)
 
 	X := []clus.Example{
 		{0, 0},
@@ -31,7 +31,7 @@ func TestPredictDifferentClusters(t *testing.T) {
 }
 
 func TestPredictSameClusters(t *testing.T) {
-	hc := New(CentroidSimilarity)
+	hc := New(CentroidSimilarity, 2)
 
 	X := []clus.Example{
 		{0, 0},

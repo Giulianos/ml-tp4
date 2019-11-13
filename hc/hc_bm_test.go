@@ -8,7 +8,7 @@ import (
 
 func BenchmarkFit(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		hc := New(CentroidSimilarity)
+		hc := New(CentroidSimilarity, 2)
 
 		X := []clus.Example{
 			{0, 0},

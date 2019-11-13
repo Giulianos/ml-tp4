@@ -4,9 +4,11 @@ import (
 	"container/heap"
 	"regexp"
 	"strings"
+
+	"github.com/Giulianos/ml-tp4/cluster"
 )
 
-func textToFeatures(texts []string) ([][]float64, []string) {
+func textToFeatures(texts []string) ([]cluster.Example, []string) {
 	labels := []string{
 		"sentWcAvg",
 		"mostRepFreqSum",
@@ -15,12 +17,13 @@ func textToFeatures(texts []string) ([][]float64, []string) {
 		"coordFreq",
 		"detArtFreq",
 		"indetArtFreq",
+		"avgWordLength",
 	}
 
-	df := make([][]float64, 0, len(texts))
+	df := make([]cluster.Example, 0, len(texts))
 
 	for _, t := range texts {
-		features := make([]float64, 0, len(labels))
+		features := make(cluster.Example, 0, len(labels))
 		features = append(features,
 			averageSentenceWords(t),
 			modeWordsFreqSum(t),
@@ -29,6 +32,7 @@ func textToFeatures(texts []string) ([][]float64, []string) {
 			relCoordConjOccurrences(t),
 			relDetArtOccurrences(t),
 			relIndetArtOccurrences(t),
+			avgWordLength(t),
 		)
 		df = append(df, features)
 	}
@@ -55,7 +59,7 @@ func averageSentenceWords(text string) float64 {
 	// get average and make it relative to text word count
 	var avg float64
 	for _, wc := range wordCounts {
-		avg += wc / float64(len(wordCounts)) / textWordCount
+		avg += wc / float64(len(wordCounts))
 	}
 
 	return avg
@@ -152,6 +156,19 @@ func relativeDifferentWords(text string) float64 {
 	}
 
 	return float64(len(words)) / wc
+}
+
+func avgWordLength(text string) float64 {
+	procText := removePunctuation(sanitizeText(text))
+
+	words := strings.Split(procText, " ")
+	wordCount := float64(len(words))
+
+	var avg float64
+	for _, w := range words {
+		avg += float64(len(w)) / wordCount
+	}
+	return avg
 }
 
 var subordConj = []string{

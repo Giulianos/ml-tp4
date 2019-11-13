@@ -9,14 +9,16 @@ import (
 // HC is the Hierarchical Clustering
 // Classifier interface implementation
 type HC struct {
-	groups     [][]clus.Example
-	similarity SimilarityFunc
+	groups      [][]clus.Example
+	groupsCount int
+	similarity  SimilarityFunc
 }
 
 // New creates a new Hierarchical Clustering clusterer
-func New(similarity SimilarityFunc) HC {
+func New(similarity SimilarityFunc, groupsCount int) HC {
 	return HC{
-		similarity: similarity,
+		similarity:  similarity,
+		groupsCount: groupsCount,
 	}
 }
 
@@ -56,7 +58,7 @@ func (hc *HC) Fit(examples []clus.Example) {
 	}
 
 	// Main loop
-	for len(hc.groups) > 2 {
+	for len(hc.groups) > hc.groupsCount {
 		minSim := math.MaxFloat64
 		var minG1, minG2 int
 		for i := 0; i < len(hc.groups)-1; i++ {

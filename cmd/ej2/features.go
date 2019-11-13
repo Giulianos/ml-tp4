@@ -91,7 +91,7 @@ func modeWordsFreqSum(text string) float64 {
 	return sum
 }
 
-// sanitizeText converts it to lowercase and remove
+// sanitizeText converts it to lowercase and removes
 // accents
 func sanitizeText(text string) string {
 	accReplacer := strings.NewReplacer(
@@ -106,7 +106,7 @@ func sanitizeText(text string) string {
 }
 
 func removePunctuation(text string) string {
-	reg, _ := regexp.Compile("[^a-zA-Z0-9\\s]+")
+	reg, _ := regexp.Compile("[^a-zA-Z0-9ñ\\s]+")
 
 	return reg.ReplaceAllString(text, "")
 }

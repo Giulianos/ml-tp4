@@ -1,12 +1,17 @@
 package main
 
-import "fmt"
+import (
+	"flag"
+	"fmt"
+)
 
 func main() {
-	texts := readDirectoryTexts("something")
-	df, labels := textToFeatures(texts)
-	fmt.Println(labels)
-	for _, r := range df {
-		fmt.Println(r)
+	textDir := flag.String("dir", "", "texts directory")
+	flag.Parse()
+
+	_, authors := readDirectoryTexts(*textDir)
+	// _, _ := textToFeatures(texts)
+	for _, a := range authors {
+		fmt.Println(a)
 	}
 }
